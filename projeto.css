@@ -92,6 +92,10 @@ h2{
     text-align: center;
 }
 
+.canvasDiv > div:nth-child(1) > div{
+    align-self: center;
+}
+
 #myCanvas{
     background-color: white;
     border: solid 1px #A0AEC0;

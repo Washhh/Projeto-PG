@@ -5,6 +5,7 @@ var amount = -1
 var count = 0
 var movPointId = 0
 var mPos
+var globalEvaluationPoints
 
 var newControlPoint = false
 var removeControlPoint = false
@@ -136,7 +137,12 @@ const newCurve = () =>{
     // console.log("newCurve")
     cPoints.push([[100,200],[300,100],[500,250]])
     // cPoints.push([[600,150],[650,110],[620,140]])
-    evaluationPoints.push(5)
+    if(amount>-1){
+        evaluationPoints.push(globalEvaluationPoints)
+    }
+    else{
+        evaluationPoints.push(5)
+    }
     amount = count
     count +=1
     draw()
@@ -149,7 +155,9 @@ const deleteCurve = () =>{
     if(count >= 0){
         count -= 1
         amount = count - 1
+        evaluationPoints[amount] = globalEvaluationPoints;
     }
+    
     draw()
 }
 
@@ -283,6 +291,7 @@ const mousePress = (x,y) => {
 const resolutionPoints = (value) =>{
     // console.log(value)
     if(value != null){
+        globalEvaluationPoints = parseInt(value,10)
         evaluationPoints[amount] = parseInt(value,10)
         // console.log(value)
     }
