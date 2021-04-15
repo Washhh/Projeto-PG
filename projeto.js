@@ -1,6 +1,6 @@
 // variáveis globais
 var cPoints = []
-var req = []
+var evaluationPoints = []
 var amount = -1
 var count = 0
 var movPointId = 0
@@ -30,6 +30,7 @@ const getPoint = (point,t)=>{
         pArray.push([point[u][0],point[u][1]])
     }
 
+    //algoritmo de De Casteljau
     for(var s = point.length-1; s>0 ; s--){
         for(u = 0; u<s; u++){
             pArray[u][0] = (pArray[u+1][0] * t) + (pArray[u][0] * (1-t))
@@ -39,6 +40,8 @@ const getPoint = (point,t)=>{
 
     return pArray[0]
 }
+
+// Funções para desenhar no canvas
 
 const drawLine = (point1, point2, color, width)=>{
     console.log("drawLine")
@@ -69,13 +72,14 @@ const draw = ()=>{
     var myCanvas = document.getElementById("myCanvas")
     var myContext = myCanvas.getContext("2d")
     
+    // Limpar o canvas
     myContext.clearRect(0, 0, canvas.width, canvas.height)
 
     for(var i = 0; i < cPoints.length; i++){
-        var color = 'pink' // white
+        var color = 'pink' // pink
 
         if(i == amount){
-            color = '#000000' // Steel pink
+            color = '#000000' // black
         }
 
         // exibir curvas
@@ -84,8 +88,8 @@ const draw = ()=>{
             var t = []
             var points = []
 
-            for(var j = 0; j <= req[i]; j++){
-                t.push(j/req[i])
+            for(var j = 0; j <= evaluationPoints[i]; j++){
+                t.push(j/evaluationPoints[i])
             }
 
             for(var k = 0; k <  t.length; k++){
@@ -94,7 +98,13 @@ const draw = ()=>{
             }
 
             for(var l = 1; l < t.length; l++){
-                drawLine(points[l-1], points[l], color, 3)
+                if(i == amount){
+                    var colorAux = 'red' // black
+                }
+                else{
+                    var colorAux = 'pink'
+                }
+                drawLine(points[l-1], points[l], colorAux, 3)
             }
         }
 
@@ -123,19 +133,19 @@ controlPoints.onclick = draw
 
 // curvas
 const newCurve = () =>{
-    console.log("newCurve")
+    // console.log("newCurve")
     cPoints.push([[100,200],[300,100],[500,250]])
     // cPoints.push([[600,150],[650,110],[620,140]])
-    req.push(5)
+    evaluationPoints.push(5)
     amount = count
     count +=1
     draw()
 }
 
 const deleteCurve = () =>{
-    console.log("deleteCurve")
+    // console.log("deleteCurve")
     cPoints.splice(amount,1)
-    req.splice(amount,1)
+    evaluationPoints.splice(amount,1)
     if(count >= 0){
         count -= 1
         amount = count - 1
@@ -144,7 +154,7 @@ const deleteCurve = () =>{
 }
 
 const nextCurve = () => {
-    console.log("nextCurve")
+    // console.log("nextCurve")
     if(amount < count-1){
         amount += 1
     }
@@ -152,7 +162,7 @@ const nextCurve = () => {
 }
 
 const previousCurve = () => {
-    console.log("previousCurve")
+    // console.log("previousCurve")
     if(amount > 0){
         amount -= 1
     }
@@ -161,11 +171,11 @@ const previousCurve = () => {
 
 // pontos
 const newPoint = () => {
-    console.log("newPoint")
+    // console.log("newPoint")
     newControlPoint = true
 }
 const removePoint = () => {
-    console.log("removePoint")
+    // console.log("removePoint")
     removeControlPoint = true
 }
 
@@ -180,12 +190,14 @@ canvas.addEventListener('mousemove', event=>{
 }, false)
 
 const move = (c, event) => {
-    console.log("move")
+    // console.log("move")
+    // mapeando a pos do mouse
     var rect = c.getBoundingClientRect()
     var posX = event.clientX - rect.left
     var posY = event.clientY - rect.top
     movingControlPoint = true
     
+    // mover o ponto
     if(foundMouse){
         cPoints[amount][movPointId] = [posX,posY]
         draw()
@@ -202,7 +214,7 @@ canvas.addEventListener('click', ()=>{
 })
 
 const mouseClick = (x,y) => {
-    console.log("mouseClick")
+    // console.log("mouseClick")
     if(newControlPoint){
         newControlPoint = false
         if(x <= canvas.width && y <= canvas.height){
@@ -211,12 +223,12 @@ const mouseClick = (x,y) => {
         }
     }
     else if(removeControlPoint){
-        removeControlPoint = false
-        
+
         for(var i = 0; i <=cPoints[amount].length; i++){
             const distP = dist(cPoints[amount][i][0], x, cPoints[amount][i][1], y)
             // distp <= raio
             if( distP <= 10){
+                removeControlPoint = false
                 cPoints[amount].splice(i,1)
                 draw()
             }
@@ -225,15 +237,15 @@ const mouseClick = (x,y) => {
 }
 
 canvas.addEventListener('mouseup', ()=>{
-    mouseUp(mPos.x, mPos.y)
+    mouseRelease(mPos.x, mPos.y)
 })
 
-const mouseUp = (x,y) => {
-    console.log("mouseUp")
+const mouseRelease = (x,y) => {
+    // console.log("mouseRelease")
     if(!newControlPoint && !removeControlPoint){
         if(foundMouse && movingControlPoint){
             cPoints[amount][movPointId] = [x,y]
-            console.log(cPoints[amount][movPointId])
+            // console.log(cPoints[amount][movPointId])
             draw()
         }
         foundMouse = false
@@ -242,20 +254,20 @@ const mouseUp = (x,y) => {
 }
 
 canvas.addEventListener('mousedown', ()=>{
-    mouseDown(mPos.x, mPos.y)
+    mousePress(mPos.x, mPos.y)
 })
 
-const mouseDown = (x,y) => {
-    console.log("mouseDown")
-    console.log(cPoints[amount])
-    console.log(x,y)
+const mousePress = (x,y) => {
+    // console.log("mousePress")
+    // console.log(cPoints[amount])
+    // console.log(x,y)
     
     if(!newControlPoint && !removeControlPoint){
         for(var i = 0; i <= cPoints[amount].length && !(foundMouse); i++){
-            console.log(i)
-            console.log(cPoints[amount][i][0])
+            // console.log(i)
+            // console.log(cPoints[amount][i][0])
             const distP = dist(cPoints[amount][i][0], x, cPoints[amount][i][1], y)
-            console.log("distP ",distP)
+            // console.log("distP ",distP)
             if(distP <= 10){
                 cPoints[amount][i] = [x,y]
                 movPointId = i
@@ -269,14 +281,13 @@ const mouseDown = (x,y) => {
 
 // input de solucao
 const resolutionPoints = (value) =>{
-    console.log(value)
+    // console.log(value)
     if(value != null){
-        req[amount] = parseInt(value,10)
-        console.log(value)
+        evaluationPoints[amount] = parseInt(value,10)
+        // console.log(value)
     }
     if(value == ''){
-        req[amount] = 5
+        evaluationPoints[amount] = 5
     }
     draw()
 }
-
