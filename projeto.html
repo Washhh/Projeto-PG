@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto</title>
+    <link rel="stylesheet" href="projeto.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@1&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div>
+        <h2>Projeto  2 de Processamento Gráfico</h2>
+    </div>
+    
+    <div class="buttonsDiv">
+        <div>
+            <p>Curvas</p>
+            <button class="createCurve" onclick="newCurve()">Cria nova curva</button>
+            <button class="deleteCurve" onclick="deleteCurve()">Deletar curva</button>
+        </div>
+        <div>
+            <p>Pontos</p>
+            <button class="createPoint" onclick="newPoint()">Adicionar ponto de controle</button>
+            <button class="deletePoint" onclick="removePoint()">Remover ponto de controle</button>
+        </div>
+        <div>
+            <p>Trocar curvas</p>
+            <button class="previousCurve" onclick="previousCurve()">Curva anterior</button>
+            <button class="nextCurve" onclick="nextCurve()">Próxima curva</button>
+        </div>  
+    </div>
+
+    <div class="canvasDiv">
+        
+        <div>
+            <input class="inputPointers" type="text" placeholder="pontos avaliados"
+                onchange="resolutionPoints(this.value)">
+            <div>
+                <p>Itens que deseja exibir</p>
+                <div>
+                    <div>
+                        <input type="checkbox" name="controlPoints"
+                            checked id="controlPoints">
+                        <label for="controlPoints">Pontos de controle</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="polygons"
+                            checked id="polygons">
+                        <label for="polygons">Poligonais de controle</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="curves"
+                            checked id="curves">
+                        <label for="curves">Curvas</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="myCanvas" width="800" height="300"></canvas>
+    
+    </div>
+
+     
+
+</body>
+<script src="projeto.js"></script>
+</html>
